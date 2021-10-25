@@ -1,0 +1,42 @@
+.userInfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+    height: 100vh;
+}
+
+.userInfo__box{
+    display: flex;
+    
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: var(--big-font-size);
+}
+
+.userInfo__title {
+    color: var(--text-color);
+    padding-right: .8rem;
+}
+
+.userInfo__value {
+    color: var(--first-color);
+}
+
+.logoutButton {
+    width: 100%;
+    padding: 1rem;
+    font-size: var(--normal-font-size);
+    outline: none;
+    border: none;
+    margin-bottom: 3rem;
+    background-color: var(--first-color);
+    color: #fff;
+    border-radius: .5rem;
+    cursor: pointer;
+}
+
+.logoutButton:hover {
+    box-shadow: 0px 15px 36px rgba(0,0,0,.15);
+}

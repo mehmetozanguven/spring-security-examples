@@ -1,0 +1,23 @@
+@media screen and (min-width: 968px) {
+    .shape1 {
+        width: 400px;
+        height: 400px;
+        top: -11rem;
+        left: -6.5rem;
+    }
+
+    .shape2 {
+        width: 300px;
+        height: 300px;
+        right: -6.5rem;
+    }
+
+    .form {
+   
+        grid-template-columns:none
+    }
+
+    .form__content {
+        width: 320px;
+    }
+}

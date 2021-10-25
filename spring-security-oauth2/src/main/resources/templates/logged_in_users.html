@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/loggedInPage.css}">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <title>LoggedIn Page</title>
+</head>
+<body>
+    <div sec:authorize="isAuthenticated()" class="loggedInContainer">
+        <div class="shape1"></div>
+        <div class="shape2"></div>
+
+        <div class="userInfo">
+            <div class="userInfo__box">
+                <p class="userInfo__title">Username: </p>
+                <p class="userInfo__value" sec:authentication="principal.username"></p>
+            </div>
+            <div class="userInfo__box">
+                <p class="userInfo__title">Login Provider: </p>
+                <p class="userInfo__value" sec:authentication="principal.provider"></p>
+            </div>
+            <div class="userInfo__box">
+                <a th:href="@{/logout}" class="logoutButton">Logout</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
