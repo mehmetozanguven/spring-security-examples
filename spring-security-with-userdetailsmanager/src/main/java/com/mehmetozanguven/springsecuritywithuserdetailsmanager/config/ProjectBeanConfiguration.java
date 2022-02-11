@@ -29,7 +29,7 @@ public class ProjectBeanConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/testdatabase");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/springsecurity");
         dataSource.setUsername("postgres");
         dataSource.setPassword("1234");
         return dataSource;
