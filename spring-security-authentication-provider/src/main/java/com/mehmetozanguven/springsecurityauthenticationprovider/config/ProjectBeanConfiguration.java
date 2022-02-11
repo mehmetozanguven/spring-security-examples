@@ -15,8 +15,10 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 public class ProjectBeanConfiguration  extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private MyCustomAuthenticationProvider myCustomAuthenticationProvider;
+
+    public MyCustomAuthenticationProvider myCustomAuthenticationProvider() {
+        return new MyCustomAuthenticationProvider(userDetailsService(), passwordEncoder());
+    }
 
     @Bean
     public UserDetailsService userDetailsService(){
@@ -36,6 +38,6 @@ public class ProjectBeanConfiguration  extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(myCustomAuthenticationProvider);
+        auth.authenticationProvider(myCustomAuthenticationProvider());
     }
 }

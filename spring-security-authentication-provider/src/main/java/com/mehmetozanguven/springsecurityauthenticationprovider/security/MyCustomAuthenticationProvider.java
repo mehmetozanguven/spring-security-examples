@@ -16,13 +16,14 @@ import org.springframework.stereotype.Component;
  * If a user is exists and password is correct, then login must be successful
  * otherwise login should fail
  */
-@Component
 public class MyCustomAuthenticationProvider implements AuthenticationProvider {
-    @Autowired
     private UserDetailsService userDetailsService;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public MyCustomAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
