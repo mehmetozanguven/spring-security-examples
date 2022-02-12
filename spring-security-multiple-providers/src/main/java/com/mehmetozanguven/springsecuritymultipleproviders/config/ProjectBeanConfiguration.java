@@ -1,6 +1,7 @@
 package com.mehmetozanguven.springsecuritymultipleproviders.config;
 
 import com.mehmetozanguven.springsecuritymultipleproviders.repositories.OtpRepository;
+import com.mehmetozanguven.springsecuritymultipleproviders.repositories.UserRepository;
 import com.mehmetozanguven.springsecuritymultipleproviders.security.filters.TokenAuthFilter;
 import com.mehmetozanguven.springsecuritymultipleproviders.security.filters.UsernamePasswordAuthFilter;
 import com.mehmetozanguven.springsecuritymultipleproviders.security.holder.AuthorizationTokenHolder;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -28,7 +30,12 @@ public class ProjectBeanConfiguration extends WebSecurityConfigurerAdapter {
     private OtpRepository otpRepository;
 
     @Autowired
-    private PostgresqlUserDetailsService postgresqlUserDetailsService;
+    private UserRepository userRepository;
+
+    @Bean
+    public PostgresqlUserDetailsService userDetailsService() {
+        return new PostgresqlUserDetailsService(userRepository);
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -47,7 +54,7 @@ public class ProjectBeanConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     public UsernamePassswordAuthProvider usernamePassswordAuthProvider() {
-        return new UsernamePassswordAuthProvider(postgresqlUserDetailsService, passwordEncoder());
+        return new UsernamePassswordAuthProvider(userDetailsService(), passwordEncoder());
     }
 
     public OtpAuthProvider otpAuthProvider(){
