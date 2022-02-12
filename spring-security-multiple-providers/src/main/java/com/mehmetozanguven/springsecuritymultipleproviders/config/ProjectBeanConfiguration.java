@@ -56,7 +56,6 @@ public class ProjectBeanConfiguration extends WebSecurityConfigurerAdapter {
 
 
     // second filter and provider
-    @Bean
     public TokenAuthFilter tokenAuthFilter() throws Exception {
         return new TokenAuthFilter(authenticationManagerBean());
     }
