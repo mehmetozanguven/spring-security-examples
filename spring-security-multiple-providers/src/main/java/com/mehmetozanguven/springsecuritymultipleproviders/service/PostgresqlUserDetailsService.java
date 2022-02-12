@@ -1,4 +1,4 @@
-package com.mehmetozanguven.springsecuritymultipleproviders.service.model;
+package com.mehmetozanguven.springsecuritymultipleproviders.service;
 
 import com.mehmetozanguven.springsecuritymultipleproviders.entities.UserDTO;
 import com.mehmetozanguven.springsecuritymultipleproviders.repositories.UserRepository;

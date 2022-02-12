@@ -1,13 +1,9 @@
-package com.mehmetozanguven.springsecuritymultipleproviders.service.filters;
+package com.mehmetozanguven.springsecuritymultipleproviders.security.filters;
 
-import com.mehmetozanguven.springsecuritymultipleproviders.service.authentications.TokenAuthentication;
-import com.mehmetozanguven.springsecuritymultipleproviders.service.holder.AuthorizationTokenHolder;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.authentications.TokenAuthentication;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -18,8 +14,11 @@ import java.io.IOException;
 
 public class TokenAuthFilter extends OncePerRequestFilter {
 
-    @Autowired
     private AuthenticationManager authenticationManager;
+
+    public TokenAuthFilter(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

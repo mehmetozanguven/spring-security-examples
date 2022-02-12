@@ -1,4 +1,4 @@
-package com.mehmetozanguven.springsecuritymultipleproviders.service.holder;
+package com.mehmetozanguven.springsecuritymultipleproviders.security.holder;
 
 import org.springframework.stereotype.Component;
 
