@@ -22,10 +22,9 @@ public class OtpAuthProvider implements AuthenticationProvider {
         String username = authentication.getName();
         String otp = (String) authentication.getCredentials();
 
-        List<OtpDTO> all_opts = otpRepository.findOtpDtoByUsername(username);
-        if (all_opts.size() == 0) {
-            throw new BadCredentialsException("There is no otp for that user");
-        }
+        OtpDTO otpInDb = otpRepository.findOtpDtoByUsername(username, otp)
+                .orElseThrow(() ->  new BadCredentialsException("There is no otp for the given username: " + username));
+
 
         return new OtpAuthentication(username, otp, List.of(() -> "read"));
     }
