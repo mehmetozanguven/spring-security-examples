@@ -1,14 +1,13 @@
-package com.mehmetozanguven.springsecuritymultipleproviders.service.filters;
+package com.mehmetozanguven.springsecuritymultipleproviders.security.filters;
 
 import com.mehmetozanguven.springsecuritymultipleproviders.entities.OtpDTO;
 import com.mehmetozanguven.springsecuritymultipleproviders.repositories.OtpRepository;
-import com.mehmetozanguven.springsecuritymultipleproviders.service.authentications.OtpAuthentication;
-import com.mehmetozanguven.springsecuritymultipleproviders.service.authentications.UsernamePasswordAuthentication;
-import com.mehmetozanguven.springsecuritymultipleproviders.service.holder.AuthorizationTokenHolder;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.authentications.OtpAuthentication;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.authentications.UsernamePasswordAuthentication;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.holder.AuthorizationTokenHolder;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -17,19 +16,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
-import org.apache.commons.lang3.RandomStringUtils;
 
-@Component
 public class UsernamePasswordAuthFilter extends OncePerRequestFilter {
-
-    @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
     private OtpRepository otpRepository;
-
-    @Autowired
     private AuthorizationTokenHolder authorizationTokenHolder;
+
+    public UsernamePasswordAuthFilter(AuthenticationManager authenticationManager,
+                                      OtpRepository otpRepository,
+                                      AuthorizationTokenHolder authorizationTokenHolder) {
+        this.authenticationManager = authenticationManager;
+        this.otpRepository = otpRepository;
+        this.authorizationTokenHolder = authorizationTokenHolder;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,

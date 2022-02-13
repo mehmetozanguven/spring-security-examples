@@ -1,20 +1,22 @@
 package com.mehmetozanguven.springsecuritymultipleproviders.config;
 
-import com.mehmetozanguven.springsecuritymultipleproviders.service.filters.TokenAuthFilter;
-import com.mehmetozanguven.springsecuritymultipleproviders.service.filters.UsernamePasswordAuthFilter;
-import com.mehmetozanguven.springsecuritymultipleproviders.service.providers.OtpAuthProvider;
-import com.mehmetozanguven.springsecuritymultipleproviders.service.providers.TokenAuthProvider;
-import com.mehmetozanguven.springsecuritymultipleproviders.service.providers.UsernamePassswordAuthProvider;
-import org.springframework.beans.factory.InitializingBean;
+import com.mehmetozanguven.springsecuritymultipleproviders.repositories.OtpRepository;
+import com.mehmetozanguven.springsecuritymultipleproviders.repositories.UserRepository;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.filters.TokenAuthFilter;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.filters.UsernamePasswordAuthFilter;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.holder.AuthorizationTokenHolder;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.providers.OtpAuthProvider;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.providers.TokenAuthProvider;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.providers.UsernamePassswordAuthProvider;
+import com.mehmetozanguven.springsecuritymultipleproviders.service.PostgresqlUserDetailsService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -23,23 +25,18 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 //@EnableAsync to enable async operations
 public class ProjectBeanConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
-    private UsernamePasswordAuthFilter usernamePasswordAuthFilter;
+    private AuthorizationTokenHolder authorizationTokenHolder;
 
     @Autowired
-    private UsernamePassswordAuthProvider usernamePassswordAuthProvider;
+    private OtpRepository otpRepository;
 
     @Autowired
-    private OtpAuthProvider otpAuthProvider;
+    private UserRepository userRepository;
 
-    // second filter and provider
     @Bean
-    public TokenAuthFilter tokenAuthFilter() {
-        return new TokenAuthFilter();
+    public PostgresqlUserDetailsService userDetailsService() {
+        return new PostgresqlUserDetailsService(userRepository);
     }
-
-    @Autowired
-    private TokenAuthProvider tokenAuthProvider;
-
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -47,22 +44,44 @@ public class ProjectBeanConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
+
+    public UsernamePasswordAuthFilter usernamePasswordAuthFilter() throws Exception {
+        return new UsernamePasswordAuthFilter(authenticationManagerBean(), otpRepository, authorizationTokenHolder);
+    }
+
+    public UsernamePassswordAuthProvider usernamePassswordAuthProvider() {
+        return new UsernamePassswordAuthProvider(userDetailsService(), passwordEncoder());
+    }
+
+    public OtpAuthProvider otpAuthProvider(){
+        return new OtpAuthProvider(otpRepository);
+    }
+
+
+    // second filter and provider
+    public TokenAuthFilter tokenAuthFilter() throws Exception {
+        return new TokenAuthFilter(authenticationManagerBean());
+    }
+
+    public TokenAuthProvider tokenAuthProvider() {
+        return new TokenAuthProvider(authorizationTokenHolder);
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(usernamePassswordAuthProvider)
-                .authenticationProvider(otpAuthProvider)
-                .authenticationProvider(tokenAuthProvider);
+        auth.authenticationProvider(usernamePassswordAuthProvider())
+                .authenticationProvider(otpAuthProvider())
+                .authenticationProvider(tokenAuthProvider());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterAt(usernamePasswordAuthFilter, BasicAuthenticationFilter.class)
-            .addFilterAfter(tokenAuthFilter(), BasicAuthenticationFilter.class);
+        http.addFilterAt(usernamePasswordAuthFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(tokenAuthFilter(), BasicAuthenticationFilter.class);
     }
 
     // If you want to change the SecurityContextHolder, you can use this method:

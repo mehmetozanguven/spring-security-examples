@@ -1,4 +1,4 @@
-package com.mehmetozanguven.springsecuritymultipleproviders.service.holder;
+package com.mehmetozanguven.springsecuritymultipleproviders.security.holder;
 
 import org.springframework.stereotype.Component;
 
@@ -7,7 +7,11 @@ import java.util.Set;
 
 @Component
 public class AuthorizationTokenHolder {
-    private Set<String> tokens = new HashSet<>();
+    private Set<String> tokens;
+
+    public AuthorizationTokenHolder() {
+        this.tokens = new HashSet<>();
+    }
 
     public void add(String token) {
         tokens.add(token);

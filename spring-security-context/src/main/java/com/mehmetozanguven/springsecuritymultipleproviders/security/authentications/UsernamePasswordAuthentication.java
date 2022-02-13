@@ -1,4 +1,4 @@
-package com.mehmetozanguven.springsecuritymultipleproviders.service.authentications;
+package com.mehmetozanguven.springsecuritymultipleproviders.security.authentications;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

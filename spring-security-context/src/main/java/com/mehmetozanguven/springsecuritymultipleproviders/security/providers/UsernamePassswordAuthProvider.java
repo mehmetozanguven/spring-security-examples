@@ -1,8 +1,7 @@
-package com.mehmetozanguven.springsecuritymultipleproviders.service.providers;
+package com.mehmetozanguven.springsecuritymultipleproviders.security.providers;
 
-import com.mehmetozanguven.springsecuritymultipleproviders.service.authentications.UsernamePasswordAuthentication;
-import com.mehmetozanguven.springsecuritymultipleproviders.service.model.PostgresqlUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.authentications.UsernamePasswordAuthentication;
+import com.mehmetozanguven.springsecuritymultipleproviders.service.PostgresqlUserDetailsService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,18 +9,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class UsernamePassswordAuthProvider implements AuthenticationProvider {
 
-    @Autowired
     private PostgresqlUserDetailsService postgresqlUserDetailsService;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public UsernamePassswordAuthProvider(PostgresqlUserDetailsService postgresqlUserDetailsService, PasswordEncoder passwordEncoder) {
+        this.postgresqlUserDetailsService = postgresqlUserDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

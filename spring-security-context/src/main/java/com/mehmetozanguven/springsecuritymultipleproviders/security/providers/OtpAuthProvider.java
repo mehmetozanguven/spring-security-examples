@@ -1,30 +1,30 @@
-package com.mehmetozanguven.springsecuritymultipleproviders.service.providers;
+package com.mehmetozanguven.springsecuritymultipleproviders.security.providers;
 
 import com.mehmetozanguven.springsecuritymultipleproviders.entities.OtpDTO;
 import com.mehmetozanguven.springsecuritymultipleproviders.repositories.OtpRepository;
-import com.mehmetozanguven.springsecuritymultipleproviders.service.authentications.OtpAuthentication;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.authentications.OtpAuthentication;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class OtpAuthProvider implements AuthenticationProvider {
-
-    @Autowired
     private OtpRepository otpRepository;
+
+    public OtpAuthProvider(OtpRepository otpRepository) {
+        this.otpRepository = otpRepository;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String otp = (String) authentication.getCredentials();
 
-        OtpDTO otpDTO = otpRepository.findOtpDtoByUsername(username)
-                .orElseThrow(() -> new BadCredentialsException("Bad Otp Credentials"));
+        OtpDTO otpInDb = otpRepository.findOtpDtoByUsername(username, otp)
+                .orElseThrow(() ->  new BadCredentialsException("There is no otp for the given username: " + username));
+
 
         return new OtpAuthentication(username, otp, List.of(() -> "read"));
     }

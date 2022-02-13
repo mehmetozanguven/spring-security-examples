@@ -1,20 +1,20 @@
-package com.mehmetozanguven.springsecuritymultipleproviders.service.providers;
+package com.mehmetozanguven.springsecuritymultipleproviders.security.providers;
 
-import com.mehmetozanguven.springsecuritymultipleproviders.service.authentications.TokenAuthentication;
-import com.mehmetozanguven.springsecuritymultipleproviders.service.holder.AuthorizationTokenHolder;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.authentications.TokenAuthentication;
+import com.mehmetozanguven.springsecuritymultipleproviders.security.holder.AuthorizationTokenHolder;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class TokenAuthProvider implements AuthenticationProvider {
-    @Autowired
     private AuthorizationTokenHolder authorizationTokenHolder;
+
+    public TokenAuthProvider(AuthorizationTokenHolder authorizationTokenHolder) {
+        this.authorizationTokenHolder = authorizationTokenHolder;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -22,8 +22,8 @@ public class TokenAuthProvider implements AuthenticationProvider {
         boolean isCorrectToken = authorizationTokenHolder.contains(authorizationToken);
 
         if (isCorrectToken){
-            return new TokenAuthentication(authorizationToken, authorizationToken, List.of(() -> "read"));
-        } else {
+            return new TokenAuthentication(null, authorizationToken, List.of(() -> "read"));
+        }else {
             throw new BadCredentialsException("Authorization value is not correct");
         }
     }
