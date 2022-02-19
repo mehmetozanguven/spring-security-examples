@@ -15,7 +15,6 @@ import java.time.Duration;
 import java.util.Arrays;
 
 @Component
-@EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     // WARNING: Please don't enable corsFilter and corsConfigurer at the same time, use one of them.
 
