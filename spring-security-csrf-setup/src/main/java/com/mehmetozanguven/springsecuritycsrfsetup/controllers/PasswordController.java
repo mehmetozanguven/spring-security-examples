@@ -1,6 +1,8 @@
 package com.mehmetozanguven.springsecuritycsrfsetup.controllers;
 
 import com.mehmetozanguven.springsecuritycsrfsetup.service.CustomerPasswordService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class PasswordController {
+    private static final Logger logger = LoggerFactory.getLogger(PasswordController.class.getSimpleName());
+
     private final CustomerPasswordService customerPasswordService;
 
     public PasswordController(@Autowired CustomerPasswordService customerPasswordService) {
@@ -18,7 +22,7 @@ public class PasswordController {
 
     @PostMapping("/changePassword")
     public String changeCustomerPassword(@RequestParam String newPassword, Model model) {
-        System.out.println("New Password will be: " + newPassword);
+        logger.info("New password will be: {}", newPassword);
         customerPasswordService.changePassword(newPassword);
         model.addAttribute("newPassword", newPassword);
         return "passwordChanged";
