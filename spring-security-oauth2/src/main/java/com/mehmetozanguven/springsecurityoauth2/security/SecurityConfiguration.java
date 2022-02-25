@@ -21,8 +21,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private static final String CLIENT_SECRET = "your_client_secret";
-    private static final String CLIENT_ID = "your_client_id";
 
     @Autowired
     private MyOidcService myOidcService;
@@ -76,18 +74,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.formLogin().loginPage(Urls.INDEX).loginProcessingUrl("/loginProcess").defaultSuccessUrl(Urls.LOGGED_IN_PAGE, true);
     }
 
-    @Bean
-    public ClientRegistrationRepository clientRepository() {
-        ClientRegistration google = googleClientRegistration();
-        return new InMemoryClientRegistrationRepository(google);
-    }
 
-    private ClientRegistration googleClientRegistration() {
-        return  CommonOAuth2Provider.GOOGLE
-                .getBuilder("google")
-                .clientId(CLIENT_ID)
-                .clientSecret(CLIENT_SECRET)
-                .build();
-    }
 
 }
