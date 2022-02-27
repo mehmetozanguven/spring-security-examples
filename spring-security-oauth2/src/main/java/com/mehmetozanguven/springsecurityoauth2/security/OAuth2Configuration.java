@@ -9,8 +9,8 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 
 @Configuration
 public class OAuth2Configuration {
-    private static final String CLIENT_SECRET = "your_client_secret";
-    private static final String CLIENT_ID = "your_client_id";
+    private final String CLIENT_ID = "your_client_id";
+    private final String CLIENT_SECRET = "your_client_secret";
 
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {

@@ -1,5 +1,6 @@
 package com.mehmetozanguven.springsecurityoauth2.model;
 
+
 import com.mehmetozanguven.springsecurityoauth2.dto.Provider;
 import com.mehmetozanguven.springsecurityoauth2.dto.UserDTO;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,13 +14,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+
 public class SecureUser implements OidcUser, UserDetails {
+    // Fields for Oidc
     private Map<String, Object> claims;
     private OidcUserInfo userInfo;
     private OidcIdToken idToken;
     private Map<String, Object> attributes;
     private Collection<SimpleGrantedAuthority> authorities;
     private String name;
+
 
     // Common for OAuth2 and BasicAuthentication
     private String provider;
@@ -29,31 +33,32 @@ public class SecureUser implements OidcUser, UserDetails {
     private String username;
 
     public static SecureUser createFromBasicAuthentication(UserDTO userDTO) {
-        SecureUser basicAuth = new SecureUser();
-        basicAuth.setProvider(Provider.LOCAL.name);
-        basicAuth.setUsername(userDTO.getEmail());
-        basicAuth.setPassword(userDTO.getPassword());
-
-        return basicAuth;
+        SecureUser secureUser = new SecureUser();
+        secureUser.setProvider(Provider.LOCAL.name);
+        secureUser.setPassword(userDTO.getPassword());
+        secureUser.setUsername(userDTO.getEmail());
+        return secureUser;
     }
 
-    public static SecureUser createFromOidcUser(OidcUser oidcUser, UserDTO userDTO) {
-        SecureUser myOidcUser = new SecureUser();
-        myOidcUser.setClaims(oidcUser.getClaims());
-        myOidcUser.setUserInfo(oidcUser.getUserInfo());
-        myOidcUser.setIdToken(oidcUser.getIdToken());
-        myOidcUser.setAttributes(oidcUser.getAttributes());
-        myOidcUser.setProvider(Provider.GOOGLE.name);
+    public static SecureUser createSecureUserFromOidcUser(OidcUser oidcUser, UserDTO userDTO) {
+        SecureUser secureUser = new SecureUser();
+        secureUser.setClaims(oidcUser.getClaims());
+        secureUser.setUserInfo(oidcUser.getUserInfo());
+        secureUser.setIdToken(oidcUser.getIdToken());
+        secureUser.setAttributes(oidcUser.getAttributes());
+        secureUser.setProvider(Provider.GOOGLE.name);
 
-        SimpleGrantedAuthority readAuthority = new SimpleGrantedAuthority(userDTO.getRole());
-        myOidcUser.setAuthorities(Collections.singleton(readAuthority));
-        myOidcUser.setName(userDTO.getEmail());
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(userDTO.getRole());
+        secureUser.setAuthorities(Collections.singleton(simpleGrantedAuthority));
 
-        myOidcUser.setUsername(userDTO.getEmail());
-        return myOidcUser;
+        secureUser.setName(userDTO.getEmail());
+        secureUser.setUsername(userDTO.getEmail());
+        secureUser.setPassword(userDTO.getPassword());
+        return secureUser;
     }
 
-    // Implementations from OidcUser interface
+
+    // OidcUser Methods
     @Override
     public Map<String, Object> getClaims() {
         return claims;
@@ -108,6 +113,7 @@ public class SecureUser implements OidcUser, UserDetails {
         this.name = name;
     }
 
+    // Common for OAuth2 and BasicAuthentication Methods
     public String getProvider() {
         return provider;
     }
@@ -116,10 +122,9 @@ public class SecureUser implements OidcUser, UserDetails {
         this.provider = provider;
     }
 
-    // Implementations from UserDetails interface
     @Override
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
     public void setPassword(String password) {
@@ -128,7 +133,7 @@ public class SecureUser implements OidcUser, UserDetails {
 
     @Override
     public String getUsername() {
-        return this.username;
+        return username;
     }
 
     public void setUsername(String username) {
@@ -153,17 +158,5 @@ public class SecureUser implements OidcUser, UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "SecureUser{" +
-                "claims=" + claims +
-                ", userInfo=" + userInfo +
-                ", idToken=" + idToken +
-                ", authorities=" + authorities +
-                ", name='" + name + '\'' +
-                ", provider='" + provider + '\'' +
-                '}';
     }
 }

@@ -1,16 +1,14 @@
 package com.mehmetozanguven.springsecurityoauth2.service;
 
+
 import com.mehmetozanguven.springsecurityoauth2.dto.UserDTO;
 import com.mehmetozanguven.springsecurityoauth2.model.SecureUser;
-import com.mehmetozanguven.springsecurityoauth2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
 
 public class MyLocalUserDetailsService implements UserDetailsService {
 
@@ -19,9 +17,9 @@ public class MyLocalUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserDTO> userInDb = userService.findByUsername(username);
+        Optional<UserDTO> userInDb = userService.findByEmail(username);
         if (userInDb.isEmpty()) {
-            throw new UsernameNotFoundException("User with this username: " + username + " not found");
+            throw new UsernameNotFoundException("There is no username with the given username: " + username);
         }
         return SecureUser.createFromBasicAuthentication(userInDb.get());
     }
